@@ -1,0 +1,472 @@
+#include "./brick_game/tetris/backend.h"
+#include "./gui/cli/frontend.h"
+
+#test test_array_zero
+    int field[W_SIZE * H_SIZE] = {0};
+    int *ptr_field[H_SIZE];
+    s21_transform(field, ptr_field, H_SIZE, W_SIZE);  
+    ptr_field[0][0]=5;
+    ptr_field[2][8]=9;
+    ptr_field[18][5]=3;
+    s21_array_zero(ptr_field, H_SIZE, W_SIZE);
+    int res=0;
+    for(int i=0; i<H_SIZE; i++) {
+        for(int j=0; j<W_SIZE; j++) {
+            if (ptr_field[i][j]!=0) {
+                res=1;
+            }
+        }
+    }    
+    ck_assert_int_eq(0, res);
+
+#test test_init_shape1
+    int field[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_field[NEXT_SIZE];
+    s21_transform(field, ptr_field, NEXT_SIZE, NEXT_SIZE);    
+    for (int i=0; i<3; i++) {    
+        s21_init_shape(ptr_field);
+        int res=0;
+        for(int i=0; i<NEXT_SIZE; i++) {
+            for(int j=0; j<NEXT_SIZE; j++) {
+                if (ptr_field[i][j]!=0) {
+                    res=1;
+                }
+            }  
+        }
+        ck_assert_int_eq(1, res);
+        napms(1005);
+    }
+
+#test test_init_shape2
+    int field[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_field[NEXT_SIZE];
+    s21_transform(field, ptr_field, NEXT_SIZE, NEXT_SIZE);    
+    for (int i=0; i<3; i++) {    
+        s21_init_shape(ptr_field);
+        int res=0;
+        for(int i=0; i<NEXT_SIZE; i++) {
+            for(int j=0; j<NEXT_SIZE; j++) {
+                if (ptr_field[i][j]!=0) {
+                    res=1;
+                }
+            }  
+        }
+        ck_assert_int_eq(1, res);
+        napms(1005);
+    }
+
+#test test_init_shape3
+    int field[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_field[NEXT_SIZE];
+    s21_transform(field, ptr_field, NEXT_SIZE, NEXT_SIZE);    
+    for (int i=0; i<3; i++) {    
+        s21_init_shape(ptr_field);
+        int res=0;
+        for(int i=0; i<NEXT_SIZE; i++) {
+            for(int j=0; j<NEXT_SIZE; j++) {
+                if (ptr_field[i][j]!=0) {
+                    res=1;
+                }
+            }  
+        }
+        ck_assert_int_eq(1, res);
+        napms(1005);
+    }
+
+#test test_init_shape4
+    int field[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_field[NEXT_SIZE];
+    s21_transform(field, ptr_field, NEXT_SIZE, NEXT_SIZE);    
+    for (int i=0; i<3; i++) {    
+        s21_init_shape(ptr_field);
+        int res=0;
+        for(int i=0; i<NEXT_SIZE; i++) {
+            for(int j=0; j<NEXT_SIZE; j++) {
+                if (ptr_field[i][j]!=0) {
+                    res=1;
+                }
+            }  
+        }
+        ck_assert_int_eq(1, res);
+        napms(1005);
+    }
+
+#test test_init_shape5
+    int field[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_field[NEXT_SIZE];
+    s21_transform(field, ptr_field, NEXT_SIZE, NEXT_SIZE);    
+    for (int i=0; i<3; i++) {    
+        s21_init_shape(ptr_field);
+        int res=0;
+        for(int i=0; i<NEXT_SIZE; i++) {
+            for(int j=0; j<NEXT_SIZE; j++) {
+                if (ptr_field[i][j]!=0) {
+                    res=1;
+                }
+            }  
+        }
+        ck_assert_int_eq(1, res);
+        napms(1005);
+    }
+
+#test test_get_state
+    game_t *game = s21_get_state();
+    ck_assert_int_eq(START, game->game_state);
+    ck_assert_int_eq(true, game->service);
+
+#test test_get_game_info
+    GameInfo_t *game = s21_get_game_info();
+    ck_assert_ptr_null(game->field);
+    ck_assert_ptr_null(game->next);    
+    ck_assert_int_eq(0, game->score);
+    ck_assert_int_eq(0, game->high_score);
+    ck_assert_int_eq(0, game->level);
+    ck_assert_int_eq(0, game->speed);
+    ck_assert_int_eq(0, game->pause);
+
+#test test_get_brick
+    curr_brick_t *game = s21_get_brick();
+    ck_assert_ptr_null(game->brick);    
+    ck_assert_int_eq(0, game->pos_x);
+    ck_assert_int_eq(0, game->pos_x);
+
+#test test_get_next
+    curr_brick_t *game = s21_get_next();
+    ck_assert_ptr_null(game->brick);    
+    ck_assert_int_eq(0, game->pos_x);
+    ck_assert_int_eq(0, game->pos_x);
+
+#test test_check_colission
+    GameInfo_t *status = s21_get_game_info();
+    int field[W_SIZE * H_SIZE] = {0};
+    int *ptr_field[H_SIZE];
+    s21_transform(field, ptr_field, H_SIZE, W_SIZE);  
+    status->field=ptr_field;
+    s21_array_zero(ptr_field, H_SIZE, W_SIZE);
+    ptr_field[0][0]=1;
+    ptr_field[0][9]=1;
+    ptr_field[19][9]=1;
+    ptr_field[19][0]=1;
+    ptr_field[1][2]=1;
+    ptr_field[2][6]=1;
+    ptr_field[4][3]=1;
+    ptr_field[7][3]=1;
+    ptr_field[10][2]=1;
+    ptr_field[11][6]=1;
+    ptr_field[13][3]=1;    
+    int brick[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_brick[NEXT_SIZE];
+    s21_transform(brick, ptr_brick, NEXT_SIZE, NEXT_SIZE);  
+    s21_array_zero(ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    ptr_brick[0][0]=1;
+    ptr_brick[1][1]=1;
+    ptr_brick[2][2]=1;
+    ptr_brick[3][3]=1;
+    ptr_brick[4][4]=1;
+    ck_assert_int_eq(0, s21_check_colission(ptr_brick, 1, 3));
+    ck_assert_int_eq(0, s21_check_colission(ptr_brick, 8, 2));
+    ck_assert_int_eq(1, s21_check_colission(ptr_brick, 2, 1));
+    ck_assert_int_eq(1, s21_check_colission(ptr_brick, 1, 2));    
+    ck_assert_int_eq(1, s21_check_colission(ptr_brick, 2, 16));
+    ck_assert_int_eq(1, s21_check_colission(ptr_brick, 2, 7));
+
+#test test_move
+    GameInfo_t *status = s21_get_game_info();
+    curr_brick_t *brick = s21_get_brick();
+    int field[W_SIZE * H_SIZE] = {0};
+    int *ptr_field[H_SIZE];
+    s21_transform(field, ptr_field, H_SIZE, W_SIZE);  
+    status->field=ptr_field;
+    s21_array_zero(ptr_field, H_SIZE, W_SIZE);
+    ptr_field[0][0]=1;
+    ptr_field[0][9]=1;
+    ptr_field[19][9]=1;
+    ptr_field[19][0]=1;
+    ptr_field[1][2]=1;
+    ptr_field[2][6]=1;
+    ptr_field[4][3]=1;
+    ptr_field[7][3]=1;
+    ptr_field[10][2]=1;
+    ptr_field[11][6]=1;
+    ptr_field[13][3]=1;    
+    int brick_buf[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_brick[NEXT_SIZE];
+    s21_transform(brick_buf, ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    brick->brick=ptr_brick;      
+    s21_array_zero(ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    ptr_brick[0][0]=1;
+    ptr_brick[1][1]=1;
+    ptr_brick[2][2]=1;
+    ptr_brick[3][3]=1;
+    ptr_brick[4][4]=1;
+    brick->pos_x=0;
+    brick->pos_y=15;
+    for (int i=0; i<20; i++) {
+        s21_move(Left);
+    }
+    ck_assert_int_eq(0, brick->pos_x);
+    for (int i=0; i<20; i++) {
+        s21_move(Right);
+    }
+    ck_assert_int_eq(4, brick->pos_x);
+    brick->pos_x=0;
+    brick->pos_y=14;
+    for (int i=0; i<20; i++) {
+        s21_move(Right);
+    }
+    ck_assert_int_eq(5, brick->pos_x);
+
+#test test_userInput
+    game_t *state = s21_get_state();
+    // Из стартового
+    state->game_state=START;
+    userInput(Start, true);
+    ck_assert_int_eq(SPAWN, state->game_state); 
+    state->game_state=START;
+    userInput(Terminate, true);
+    ck_assert_int_eq(EXIT, state->game_state);
+    state->game_state=START;
+    userInput(Pause, true);
+    ck_assert_int_eq(START, state->game_state);
+    userInput(Action, true);
+    ck_assert_int_eq(START, state->game_state);
+    // Из спавна
+    state->game_state=SPAWN;
+    userInput(Pause, true);
+    ck_assert_int_eq(MOVING, state->game_state);
+    // Из мувинга
+    state->game_state=MOVING;
+    GameInfo_t *status = s21_get_game_info();
+    curr_brick_t *brick = s21_get_brick();
+    int field[W_SIZE * H_SIZE] = {0};
+    int *ptr_field[H_SIZE];
+    s21_transform(field, ptr_field, H_SIZE, W_SIZE);  
+    status->field=ptr_field;
+    s21_array_zero(ptr_field, H_SIZE, W_SIZE);
+    ptr_field[0][0]=1;
+    ptr_field[0][9]=1;
+    ptr_field[19][9]=1;
+    ptr_field[19][0]=1;
+    ptr_field[1][2]=1;
+    ptr_field[2][6]=1;
+    ptr_field[4][3]=1;
+    ptr_field[7][3]=1;
+    ptr_field[10][2]=1;
+    ptr_field[11][6]=1;
+    ptr_field[13][3]=1;    
+    int brick_buf[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_brick[NEXT_SIZE];
+    s21_transform(brick_buf, ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    brick->brick=ptr_brick;      
+    s21_array_zero(ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    ptr_brick[0][0]=1;
+    ptr_brick[1][1]=1;
+    ptr_brick[2][2]=1;
+    ptr_brick[3][3]=1;
+    ptr_brick[4][4]=1;
+    brick->pos_x=1;
+    brick->pos_y=15;
+    userInput(Left, true);
+    ck_assert_int_eq(MOVING, state->game_state);    
+    ck_assert_int_eq(0, brick->pos_x);
+    userInput(Right, true);
+    ck_assert_int_eq(MOVING, state->game_state);
+    ck_assert_int_eq(1, brick->pos_x);
+    userInput(Action, true);
+    ck_assert_int_eq(MOVING, state->game_state);
+    userInput(Pause, true);
+    ck_assert_int_eq(PAUSE, state->game_state);
+    userInput(Pause, true);
+    ck_assert_int_eq(MOVING, state->game_state);
+    userInput(Terminate, true);
+    ck_assert_int_eq(EXIT, state->game_state);
+    // Из мувинга пауза и выход
+    state->game_state=MOVING;
+    s21_array_zero(ptr_field, H_SIZE, W_SIZE);
+    ptr_field[0][0]=1;
+    ptr_field[0][9]=1;
+    ptr_field[19][9]=1;
+    ptr_field[19][0]=1;
+    ptr_field[1][2]=1;
+    ptr_field[2][6]=1;
+    ptr_field[4][3]=1;
+    ptr_field[7][3]=1;
+    ptr_field[10][2]=1;
+    ptr_field[11][6]=1;
+    ptr_field[13][3]=1;
+    s21_array_zero(ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    ptr_brick[0][0]=1;
+    ptr_brick[1][1]=1;
+    ptr_brick[2][2]=1;
+    ptr_brick[3][3]=1;
+    ptr_brick[4][4]=1;
+    brick->pos_x=1;
+    brick->pos_y=15;
+    userInput(Pause, true);
+    ck_assert_int_eq(PAUSE, state->game_state);
+    userInput(Left, true);
+    ck_assert_int_eq(PAUSE, state->game_state);
+    userInput(Terminate, true);
+    ck_assert_int_eq(EXIT, state->game_state);
+    // Из мувинга вниз
+    state->game_state=MOVING;
+    s21_array_zero(ptr_field, H_SIZE, W_SIZE);
+    ptr_field[0][0]=1;
+    ptr_field[0][9]=1;
+    ptr_field[19][9]=1;
+    ptr_field[19][0]=1;
+    ptr_field[1][2]=1;
+    ptr_field[2][6]=1;
+    ptr_field[4][3]=1;
+    ptr_field[7][3]=1;
+    ptr_field[10][2]=1;
+    ptr_field[11][6]=1;
+    ptr_field[13][3]=1;
+    s21_array_zero(ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    ptr_brick[0][0]=1;
+    ptr_brick[1][1]=1;
+    ptr_brick[2][2]=1;
+    ptr_brick[3][3]=1;
+    ptr_brick[4][4]=1;
+    brick->pos_x=1;
+    brick->pos_y=15;
+    userInput(Down, true);
+    ck_assert_int_eq(ATTACHING, state->game_state);
+    userInput(Up, true);
+    ck_assert_int_eq(SPAWN, state->game_state);
+    // Из спавна в геймовер
+    state->game_state=SPAWN;
+    ptr_field[0][0]=1;
+    ptr_field[0][1]=1;
+    ptr_field[0][2]=1;
+    ptr_field[0][3]=1;
+    ptr_field[0][4]=1;
+    ptr_field[0][5]=1;
+    ptr_field[0][6]=1;
+    ptr_field[0][7]=1;
+    ptr_field[0][8]=1;
+    ptr_field[0][9]=1;
+    userInput(Up, true);
+    ck_assert_int_eq(GAMEOVER, state->game_state);
+    userInput(Up, true);
+    userInput(Terminate, true);
+    ck_assert_int_eq(EXIT, state->game_state);
+    // Из геймовера
+    state->game_state=GAMEOVER;    
+    userInput(Start, true);
+    ck_assert_int_eq(START, state->game_state);
+    // Из геймовера
+    state->game_state=GAMEOVER;    
+    userInput(Pause, true);
+    ck_assert_int_eq(GAMEOVER, state->game_state);
+    // Удаление строки
+    state->game_state=ATTACHING;
+    status->speed=1;
+    s21_array_zero(status->field, H_SIZE, W_SIZE);
+    status->field[18][0]=1;
+    status->field[19][0]=1;
+    status->field[19][1]=1;
+    status->field[19][2]=1;
+    status->field[19][3]=1;
+    status->field[19][4]=1;
+    status->field[19][5]=1;
+    status->field[19][6]=1;
+    status->field[19][7]=1;
+    status->field[19][8]=1;
+    status->field[19][9]=1;   
+    s21_array_zero(brick->brick, NEXT_SIZE, NEXT_SIZE);    
+    brick->brick[1][2]=1;
+    brick->brick[2][2]=1;
+    brick->brick[3][2]=1;
+    brick->brick[4][2]=1;
+    brick->pos_x=4;
+    brick->pos_y=14;
+    userInput(Up, true);
+    ck_assert_int_eq(SPAWN, state->game_state);
+    userInput(Up, true);
+    ck_assert_int_eq(MOVING, state->game_state);
+
+#test test_updateCurrentState
+    GameInfo_t *status = s21_get_game_info();
+    curr_brick_t *brick = s21_get_brick();
+    int field[W_SIZE * H_SIZE] = {0};
+    int *ptr_field[H_SIZE];
+    s21_transform(field, ptr_field, H_SIZE, W_SIZE);  
+    status->field=ptr_field;
+    s21_array_zero(ptr_field, H_SIZE, W_SIZE);
+    ptr_field[3][2]=1;
+    ptr_field[10][6]=1;
+    ptr_field[14][3]=1;       
+    int brick_buf[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_brick[NEXT_SIZE];
+    s21_transform(brick_buf, ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    brick->brick=ptr_brick;      
+    s21_array_zero(ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    ptr_brick[3][1]=1;
+    ptr_brick[1][3]=1;   
+    brick->pos_x=5;
+    brick->pos_y=4;
+    GameInfo_t status1=updateCurrentState();
+    ck_assert_int_eq(1, status1.field[3][2]);
+    ck_assert_int_eq(1, status1.field[10][6]);
+    ck_assert_int_eq(1, status1.field[14][3]);
+    ck_assert_int_eq(1, status1.field[7][6]);
+    ck_assert_int_eq(1, status1.field[5][8]);
+
+#test test_shift
+    game_t *state = s21_get_state();
+    GameInfo_t *status = s21_get_game_info();
+    status->speed=1;
+    curr_brick_t *brick = s21_get_brick();
+    int field[W_SIZE * H_SIZE] = {0};
+    int *ptr_field[H_SIZE];
+    s21_transform(field, ptr_field, H_SIZE, W_SIZE);  
+    status->field=ptr_field;
+    s21_array_zero(ptr_field, H_SIZE, W_SIZE);
+    ptr_field[0][0]=1;
+    ptr_field[0][9]=1;
+    ptr_field[19][9]=1;
+    ptr_field[19][0]=1;
+    ptr_field[1][2]=1;
+    ptr_field[2][6]=1;
+    ptr_field[4][3]=1;
+    ptr_field[7][3]=1;
+    ptr_field[10][2]=1;
+    ptr_field[11][6]=1;
+    ptr_field[13][3]=1;    
+    int brick_buf[NEXT_SIZE * NEXT_SIZE] = {0};
+    int *ptr_brick[NEXT_SIZE];
+    s21_transform(brick_buf, ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    brick->brick=ptr_brick;      
+    s21_array_zero(ptr_brick, NEXT_SIZE, NEXT_SIZE);
+    ptr_brick[0][0]=1;
+    ptr_brick[1][1]=1;
+    ptr_brick[2][2]=1;
+    ptr_brick[3][3]=1;
+    ptr_brick[4][4]=1;
+    brick->pos_x=5;
+    brick->pos_y=2;
+    state->game_state=MOVING;
+    for (int i=0; i<101; i++) {
+        userInput(Up, true);
+    }
+    ck_assert_int_eq(SHIFTING, state->game_state);
+    userInput(Up, true);
+    ck_assert_int_eq(MOVING, state->game_state);
+
+#test test_check_level
+    GameInfo_t *status = s21_get_game_info();
+    status->score=800;
+    status->level=0;
+    s21_check_level();
+    ck_assert_int_eq(1, status->level);
+    status->score=8000;
+    status->level=0;
+    s21_check_level();
+    ck_assert_int_eq(10, status->level);
+
+#test test_userInput6
+    game_t *state = s21_get_state();    
+    state->game_state=88;
+    userInput(-1, true);
+    ck_assert_int_eq(EXIT, state->game_state);
